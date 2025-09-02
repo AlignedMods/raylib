@@ -732,39 +732,7 @@ static XID X11WindowHandle;
 // Get native window handle
 void *GetWindowHandle(void)
 {
-#if defined(_WIN32)
-    // NOTE: Returned handle is: void *HWND (windows.h)
-    return glfwGetWin32Window(platform.handle);
-#endif
-#if defined(__linux__)
-    #if defined(_GLFW_WAYLAND)
-        #if defined(_GLFW_X11)
-            int platformID = glfwGetPlatform();
-            if (platformID == GLFW_PLATFORM_WAYLAND)
-            {
-                return glfwGetWaylandWindow(platform.handle);
-            }
-            else
-            {
-                X11WindowHandle = glfwGetX11Window(platform.handle);
-                return &X11WindowHandle;
-            }
-        #else
-            return glfwGetWaylandWindow(platform.handle);
-        #endif
-    #elif defined(_GLFW_X11)
-        // Store the window handle localy and return a pointer to the variable instead
-        // Reasoning detailed in the declaration of X11WindowHandle
-        X11WindowHandle = glfwGetX11Window(platform.handle);
-        return &X11WindowHandle;
-    #endif
-#endif
-#if defined(__APPLE__)
-    // NOTE: Returned handle is: (objc_object *)
-    return (void *)glfwGetCocoaWindow(platform.handle);
-#endif
-
-    return NULL;
+    return platform.handle;
 }
 
 // Get number of monitors
