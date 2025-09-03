@@ -130,22 +130,22 @@ void ClosePlatform(void);        // Close platform
 static void ErrorCallback(int error, const char *description);                             // GLFW3 Error Callback, runs on GLFW3 error
 
 // Window callbacks events
-static void WindowSizeCallback(GLFWwindow *window, int width, int height);                 // GLFW3 WindowSize Callback, runs when window is resized
-static void WindowPosCallback(GLFWwindow* window, int x, int y);                     // GLFW3 WindowPos Callback, runs when window is moved
-static void WindowIconifyCallback(GLFWwindow *window, int iconified);                      // GLFW3 WindowIconify Callback, runs when window is minimized/restored
-static void WindowMaximizeCallback(GLFWwindow* window, int maximized);                     // GLFW3 Window Maximize Callback, runs when window is maximized
-static void WindowFocusCallback(GLFWwindow *window, int focused);                          // GLFW3 WindowFocus Callback, runs when window get/lose focus
-static void WindowDropCallback(GLFWwindow *window, int count, const char **paths);         // GLFW3 Window Drop Callback, runs when drop files into window
-static void WindowContentScaleCallback(GLFWwindow *window, float scalex, float scaley);    // GLFW3 Window Content Scale Callback, runs when window changes scale
+void WindowSizeCallback(GLFWwindow *window, int width, int height);                 // GLFW3 WindowSize Callback, runs when window is resized
+void WindowPosCallback(GLFWwindow* window, int x, int y);                     // GLFW3 WindowPos Callback, runs when window is moved
+void WindowIconifyCallback(GLFWwindow *window, int iconified);                      // GLFW3 WindowIconify Callback, runs when window is minimized/restored
+void WindowMaximizeCallback(GLFWwindow* window, int maximized);                     // GLFW3 Window Maximize Callback, runs when window is maximized
+void WindowFocusCallback(GLFWwindow *window, int focused);                          // GLFW3 WindowFocus Callback, runs when window get/lose focus
+void WindowDropCallback(GLFWwindow *window, int count, const char **paths);         // GLFW3 Window Drop Callback, runs when drop files into window
+void WindowContentScaleCallback(GLFWwindow *window, float scalex, float scaley);    // GLFW3 Window Content Scale Callback, runs when window changes scale
 
 // Input callbacks events
-static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);  // GLFW3 Keyboard Callback, runs on key pressed
-static void CharCallback(GLFWwindow *window, unsigned int codepoint);                      // GLFW3 Char Callback, runs on key pressed (get codepoint value)
-static void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods);     // GLFW3 Mouse Button Callback, runs on mouse button pressed
-static void MouseCursorPosCallback(GLFWwindow *window, double x, double y);                // GLFW3 Cursor Position Callback, runs on mouse move
-static void MouseScrollCallback(GLFWwindow *window, double xoffset, double yoffset);       // GLFW3 Scrolling Callback, runs on mouse wheel
-static void CursorEnterCallback(GLFWwindow *window, int enter);                            // GLFW3 Cursor Enter Callback, cursor enters client area
-static void JoystickCallback(int jid, int event);                                           // GLFW3 Joystick Connected/Disconnected Callback
+void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);  // GLFW3 Keyboard Callback, runs on key pressed
+void CharCallback(GLFWwindow *window, unsigned int codepoint);                      // GLFW3 Char Callback, runs on key pressed (get codepoint value)
+void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods);     // GLFW3 Mouse Button Callback, runs on mouse button pressed
+void MouseCursorPosCallback(GLFWwindow *window, double x, double y);                // GLFW3 Cursor Position Callback, runs on mouse move
+void MouseScrollCallback(GLFWwindow *window, double xoffset, double yoffset);       // GLFW3 Scrolling Callback, runs on mouse wheel
+void CursorEnterCallback(GLFWwindow *window, int enter);                            // GLFW3 Cursor Enter Callback, cursor enters client area
+void JoystickCallback(int jid, int event);                                           // GLFW3 Joystick Connected/Disconnected Callback
 
 // Wrappers used by glfwInitAllocator
 static void *AllocateWrapper(size_t size, void *user);                                     // GLFW3 GLFWallocatefun, wrapps around RL_MALLOC macro
@@ -1767,7 +1767,7 @@ static void ErrorCallback(int error, const char *description)
 
 // GLFW3 WindowSize Callback, runs when window is resizedLastFrame
 // NOTE: Window resizing not enabled by default, use SetConfigFlags()
-static void WindowSizeCallback(GLFWwindow *window, int width, int height)
+void WindowSizeCallback(GLFWwindow *window, int width, int height)
 {
     // WARNING: On window minimization, callback is called,
     // but we don't want to change internal screen values, it breaks things
@@ -1799,40 +1799,40 @@ static void WindowSizeCallback(GLFWwindow *window, int width, int height)
 
     // WARNING: If using a render texture, it is not scaled to new size
 }
-static void WindowPosCallback(GLFWwindow* window, int x, int y)
+void WindowPosCallback(GLFWwindow* window, int x, int y)
 {
     // Set current window position
     CORE.Window.position.x = x;
     CORE.Window.position.y = y;
 }
-static void WindowContentScaleCallback(GLFWwindow *window, float scalex, float scaley)
+void WindowContentScaleCallback(GLFWwindow *window, float scalex, float scaley)
 {
     CORE.Window.screenScale = MatrixScale(scalex, scaley, 1.0f);
 }
 
 // GLFW3 WindowIconify Callback, runs when window is minimized/restored
-static void WindowIconifyCallback(GLFWwindow *window, int iconified)
+void WindowIconifyCallback(GLFWwindow *window, int iconified)
 {
     if (iconified) CORE.Window.flags |= FLAG_WINDOW_MINIMIZED;  // The window was iconified
     else CORE.Window.flags &= ~FLAG_WINDOW_MINIMIZED;           // The window was restored
 }
 
 // GLFW3 WindowMaximize Callback, runs when window is maximized/restored
-static void WindowMaximizeCallback(GLFWwindow *window, int maximized)
+void WindowMaximizeCallback(GLFWwindow *window, int maximized)
 {
     if (maximized) CORE.Window.flags |= FLAG_WINDOW_MAXIMIZED;  // The window was maximized
     else CORE.Window.flags &= ~FLAG_WINDOW_MAXIMIZED;           // The window was restored
 }
 
 // GLFW3 WindowFocus Callback, runs when window get/lose focus
-static void WindowFocusCallback(GLFWwindow *window, int focused)
+void WindowFocusCallback(GLFWwindow *window, int focused)
 {
     if (focused) CORE.Window.flags &= ~FLAG_WINDOW_UNFOCUSED;   // The window was focused
     else CORE.Window.flags |= FLAG_WINDOW_UNFOCUSED;            // The window lost focus
 }
 
 // GLFW3 Window Drop Callback, runs when drop files into window
-static void WindowDropCallback(GLFWwindow *window, int count, const char **paths)
+void WindowDropCallback(GLFWwindow *window, int count, const char **paths)
 {
     if (count > 0)
     {
@@ -1860,7 +1860,7 @@ static void WindowDropCallback(GLFWwindow *window, int count, const char **paths
 }
 
 // GLFW3 Keyboard Callback, runs on key pressed
-static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
     if (key < 0) return;    // Security check, macOS fn key generates -1
 
@@ -1887,7 +1887,7 @@ static void KeyCallback(GLFWwindow *window, int key, int scancode, int action, i
 }
 
 // GLFW3 Char Callback, get unicode codepoint value
-static void CharCallback(GLFWwindow *window, unsigned int codepoint)
+void CharCallback(GLFWwindow *window, unsigned int codepoint)
 {
     //TRACELOG(LOG_DEBUG, "Char Callback: Codepoint: %i", codepoint);
 
@@ -1906,7 +1906,7 @@ static void CharCallback(GLFWwindow *window, unsigned int codepoint)
 }
 
 // GLFW3 Mouse Button Callback, runs on mouse button pressed
-static void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 {
     // WARNING: GLFW could only return GLFW_PRESS (1) or GLFW_RELEASE (0) for now,
     // but future releases may add more actions (i.e. GLFW_REPEAT)
@@ -1942,7 +1942,7 @@ static void MouseButtonCallback(GLFWwindow *window, int button, int action, int 
 }
 
 // GLFW3 Cursor Position Callback, runs on mouse move
-static void MouseCursorPosCallback(GLFWwindow *window, double x, double y)
+void MouseCursorPosCallback(GLFWwindow *window, double x, double y)
 {
     CORE.Input.Mouse.currentPosition.x = (float)x;
     CORE.Input.Mouse.currentPosition.y = (float)y;
@@ -1973,20 +1973,20 @@ static void MouseCursorPosCallback(GLFWwindow *window, double x, double y)
 }
 
 // GLFW3 Scrolling Callback, runs on mouse wheel
-static void MouseScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+void MouseScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
     CORE.Input.Mouse.currentWheelMove = (Vector2){ (float)xoffset, (float)yoffset };
 }
 
 // GLFW3 CursorEnter Callback, when cursor enters the window
-static void CursorEnterCallback(GLFWwindow *window, int enter)
+void CursorEnterCallback(GLFWwindow *window, int enter)
 {
     if (enter) CORE.Input.Mouse.cursorOnScreen = true;
     else CORE.Input.Mouse.cursorOnScreen = false;
 }
 
 // GLFW3 Joystick Connected/Disconnected Callback
-static void JoystickCallback(int jid, int event)
+void JoystickCallback(int jid, int event)
 {
     if (event == GLFW_CONNECTED)
     {
